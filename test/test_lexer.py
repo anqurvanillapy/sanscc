@@ -15,10 +15,22 @@ def _run(cmd):
 
 class TestLexer(unittest.TestCase):
     """Basic test cases for lexer"""
+    def test_valid_number(self):
+        tokens = b'INT 0123456789\nINT 9876543210\n'
+        self.assertEqual(_check('0123456789 9876543210'), tokens)
+
+    def test_valid_operators(self):
+        tokens = b'OPT +\nOPT -\nOPT *\nOPT /\n'
+        self.assertEqual(_check('+ - * /'), tokens)
+
     def test_valid_expression(self):
         tokens = b'INT 1\nOPT +\nINT 22\nOPT *\nINT 333\n'
-        self.assertEqual(_check('1+22 *333'), tokens)
+        self.assertEqual(_check('1+22   *333'), tokens)
 
-    def test_invalid_expression(self):
+    def test_invalid_character(self):
         with self.assertRaises(CalledProcessError):
             _run('!')
+
+    def test_invalid_operator(self):
+        with self.assertRaises(CalledProcessError):
+            _run('1++')

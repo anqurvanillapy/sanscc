@@ -6,6 +6,9 @@
 #
 #   Note: Use printf '%s\n' "${tokens[@]}" to print the elements of tokens array
 #   separated by newlines.
+#
+#   XXX: Use associative arrays to store the valid tokens, especially the
+#   operators combined by some non-alphanumeric letters. 
 
 # Global settings
 shopt -s extglob    # now *(...) is usable
@@ -88,5 +91,3 @@ while IFS= read -N 1 c; do
             ;;
     esac
 done <&0
-
-printf '%s\n' "${tokens[@]}"

@@ -16,7 +16,7 @@ def _run(cmd):
 class TestLexer(unittest.TestCase):
     """Basic test cases for lexer"""
     def test_valid_number(self):
-        tokens = b'INT 0123456789\nINT 9876543210\n'
+        tokens = b'NAT 0123456789\nNAT 9876543210\n'
         self.assertEqual(_check('0123456789 9876543210'), tokens)
 
     def test_valid_operators(self):
@@ -24,7 +24,7 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(_check('+ - * /'), tokens)
 
     def test_valid_expression(self):
-        tokens = b'INT 1\nOPT +\nINT 22\nOPT *\nINT 333\n'
+        tokens = b'NAT 1\nOPT +\nNAT 22\nOPT *\nNAT 333\n'
         self.assertEqual(_check('1+22   *333'), tokens)
 
     def test_invalid_character(self):

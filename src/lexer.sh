@@ -25,13 +25,13 @@ buf=""
 INVALID_SYNTAX="invalid syntax"
 
 # Recognise a token and append to the token array, or raise a error message.
-function append_token() {
+function tokenize() {
     # If a whitespace/newline given.
     if [[ $# -lt 1 ]]; then
         if [[ "$buf" != "" ]]; then
             case "$buf" in
                 *([0-9]))
-                    tokens+=("INT $buf")
+                    tokens+=("NAT $buf")
                     buf=""
                     ;;
                 [+\-*/])
@@ -52,7 +52,7 @@ function append_token() {
                 ;;
             *([0-9]))
                 if [[ "$1" == [+\-*/] ]]; then
-                    tokens+=("INT $buf")
+                    tokens+=("NAT $buf")
                     buf="$1"
                 else
                     buf="$buf$1"
@@ -71,19 +71,20 @@ function append_token() {
     fi
 }
 
+# Main loop of the scanner.
 while IFS= read -N 1 c; do
     ((col++))
     case "$c" in
         $'\n')
             ((row++))
             ((col=0))
-            append_token
+            tokenize
             ;;
         $' ')
-            append_token
+            tokenize
             ;;
         [0-9+\-*/])
-            append_token "$c"
+            tokenize "$c"
             ;;
         *)
             echo "$row:$col "$INVALID_SYNTAX" \"$buf$c\""
@@ -91,3 +92,5 @@ while IFS= read -N 1 c; do
             ;;
     esac
 done <&0
+
+printf '%s\n' "${tokens[@]}"

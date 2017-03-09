@@ -22,7 +22,7 @@ tokens=()
 buf=""
 
 # Error messages.
-INVALID_SYNTAX="invalid syntax"
+INVALID_TOKEN="invalid token"
 
 # Recognise a token and append to the token array, or raise a error message.
 function tokenize() {
@@ -39,31 +39,32 @@ function tokenize() {
                     buf=""
                     ;;
                 *)
-                    echo "$row:$col "$INVALID_SYNTAX" \"$buf\""
+                    echo "$row:$col "$INVALID_TOKEN" \"$buf\""
                     exit 1
                     ;;
             esac
         fi
     # If a valid character given.
     else
+        local c="$1"
         case "$buf" in
             "")
-                buf="$buf$1"
+                buf="$buf$c"
                 ;;
             *([0-9]))
-                if [[ "$1" == [+\-*/] ]]; then
+                if [[ "$c" == [+\-*/] ]]; then
                     tokens+=("NAT $buf")
-                    buf="$1"
+                    buf="$c"
                 else
-                    buf="$buf$1"
+                    buf="$buf$c"
                 fi
                 ;;
             [+\-*/])
-                if [[ "$1" == [0-9] ]]; then
+                if [[ "$c" == [0-9] ]]; then
                     tokens+=("OPT $buf")
-                    buf="$1"
+                    buf="$c"
                 else
-                    echo "$row:$col "$INVALID_SYNTAX" \"$buf$1\""
+                    echo "$row:$col "$INVALID_TOKEN" \"$buf$c\""
                     exit 1
                 fi
                 ;;
@@ -87,7 +88,7 @@ while IFS= read -N 1 c; do
             tokenize "$c"
             ;;
         *)
-            echo "$row:$col "$INVALID_SYNTAX" \"$buf$c\""
+            echo "$row:$col "$INVALID_TOKEN" \"$buf$c\""
             exit 1
             ;;
     esac

@@ -1,3 +1,8 @@
+(* Terminals. *)
 digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
-natural_number = digit, { digit };
+nat = digit, { digit };
 operator = "+" | "-" | "*" | "/";
+
+(* Non-terminals. *)
+expr = nat rest;
+rest = [operator nat rest]; (* might be epsilon, hence an empty word *)

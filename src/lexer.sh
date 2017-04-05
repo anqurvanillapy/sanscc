@@ -8,10 +8,12 @@
 #   separated by newlines.
 #
 #   XXX: Use associative arrays to store the valid tokens, especially the
-#   operators combined by some non-alphanumeric letters. 
+#   operators combined by some non-alphanumeric letters.
+#
+#   XXX: Introduce OOP in Bash.
 
 # Global settings
-shopt -s extglob    # now *(...) is usable
+shopt -s extglob    # now *(...) is available
 
 # Source file offset.
 row=1
@@ -23,6 +25,12 @@ buf=""
 
 # Error messages.
 INVALID_TOKEN="invalid token"
+
+# Token tag types.
+NUM=256
+ID=257
+TRUE=258
+FALSE=259
 
 # Recognise a token and append to the token array, or raise a error message.
 function tokenize() {
